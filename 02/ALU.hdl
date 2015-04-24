@@ -42,5 +42,26 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-   // Put you code here:
+   Mux16(a=x, b=false, sel=zx, out=outzx);
+
+   Not16(in=outzx, out=notoutzx);
+   Mux16(a=outzx, b=notoutzx, sel=nx, out=outnx);
+
+   Mux16(a=y, b=false, sel=zy, out=outzy);
+
+   Not16(in=outzy, out=notoutzy);
+   Mux16(a=outzy, b=notoutzy, sel=ny, out=outny);
+
+   And16(a=outnx, b=outny, out=and);
+   Add16(a=outnx, b=outny, out=sum);
+   Mux16(a=and, b=sum, sel=f, out=outf);
+
+   Not16(in=outf, out=notoutf);
+   Mux16(a=outf, b=notoutf, sel=no, out=out, out[15]=ng, out[0..7]=outlo, out[8..15]=outhi);
+
+   //Ugly. Why don't we have a Nor16Way?
+   Or8Way(in=outlo, out=notzrlo);
+   Or8Way(in=outhi, out=notzrhi);
+   Or(a=notzrlo, b=notzrhi, out=notzr);
+   Not(in=notzr, out=zr);
 }
