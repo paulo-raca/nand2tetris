@@ -39,5 +39,54 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+    //Just renaming instruction wires...
+
+    Or(a=instruction[0], b=false, out=instrJumpGt);
+    Or(a=instruction[1], b=false, out=instrJumpEq);
+    Or(a=instruction[2], b=false, out=instrJumpLt);
+    Or(a=instruction[3], b=false, out=instrDestM);
+    Or(a=instruction[4], b=false, out=instrDestD);
+    Or(a=instruction[5], b=false, out=instrDestA);
+
+    Or(a=instruction[6], b=false, out=instrAluNo);
+    Or(a=instruction[7], b=false, out=instrAluF);
+    Or(a=instruction[8], b=false, out=instrAluNy);
+    Or(a=instruction[9], b=false, out=instrAluZy);
+    Or(a=instruction[10], b=false, out=instrAluNx);
+    Or(a=instruction[11], b=false, out=instrAluZx);
+    Or(a=instruction[12], b=false, out=instrAluMem);
+
+    Or(a=instruction[15], b=false, out=instructionTypeC);
+    Not(in=instructionTypeC, out=instructionTypeA);
+
+    //A-register
+    Mux16(a=alu, b=instruction, sel=instructionTypeA, out=inA);
+    Or(a=instructionTypeA, b=instrDestA, out=loadA);
+    ARegister(in=inA, load=loadA, out=a, out[0..14]=addressM);
+
+    //D-Register
+    And(a=instructionTypeC, b=instrDestD, out=loadD);
+    DRegister(in=alu, load=loadD, out=d);
+
+    //Memory
+    And(a=instructionTypeC, b=instrDestM, out=writeM);
+
+    //A/M mux
+    Mux16(a=a, b=inM, sel=instrAluMem, out=am);
+
+    //ALU
+    ALU(x=d, y=am, zx=instrAluZx, nx=instrAluNx, zy=instrAluZy, ny=instrAluNy, f=instrAluF, no=instrAluNo, zr=aluEq, ng=aluLt, out=alu, out=outM);
+
+    //Jump conditionals
+    Or(a=aluEq, b=aluLt, out=aluLe);
+    Not(in=aluLe, out=aluGt);
+    And(a=instrJumpGt, b=aluGt, out=jumpGt);
+    And(a=instrJumpEq, b=aluEq, out=jumpEq);
+    And(a=instrJumpLt, b=aluLt, out=jumpLt);
+    Or(a=jumpGt, b=jumpEq, out=jumpGe);
+    Or(a=jumpGe, b=jumpLt, out=jump);
+    And(a=jump, b=instructionTypeC, out=loadPC);
+
+    //PC
+    PC(in=a, load=loadPC, inc=true, reset=reset, out[0..14]=pc);
 }

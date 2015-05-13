@@ -27,5 +27,22 @@ CHIP Memory {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+
+    //Sub-memories
+    RAM16K(in=in, load=RamLoad,    address=address[0..13], out=RamOut);
+    Screen(in=in, load=ScreenLoad, address=address[0..12], out=ScreenOut);
+    Keyboard(out=KeyboardOut);
+
+    //Control signals to RAM
+    Not(in=address[14], out=RamSelected);
+    And(a=RamSelected, b=load, out=RamLoad);
+
+    //Control signals to Screen
+    Not(in=address[13], out=notaddress13);
+    And(a=address[14], b=notaddress13, out=ScreenSelected);
+    And(a=ScreenSelected, b=load, out=ScreenLoad);
+
+    //Mutiplexed output 
+    Mux16(sel=address[13], a=ScreenOut, b=KeyboardOut, out=DeviceOut);
+    Mux16(sel=address[14], a=RamOut, b=DeviceOut, out=out);
 }
