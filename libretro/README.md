@@ -7,6 +7,13 @@ Nand2Tetris is a really great course, but the emulator it ships with isn't _that
 
 This project implements a simple and small libretro core to run Hack binaries (.hack files), and works nicely :)
 
+Demo
+====
+
+You can see a short demo of this in action on [Youtube](https://www.youtube.com/watch?v=6LOkCOVvFGo):
+
+
+[![Pong Demo](https://img.youtube.com/vi/6LOkCOVvFGo/0.jpg)](https://www.youtube.com/watch?v=6LOkCOVvFGo)
 
 Limitations
 ===========
@@ -36,6 +43,15 @@ Libretro also supports full Keyboards, and I should switch to use that instead (
 Future Improvements
 ===================
 
+Built-in Compiler
+-----------------
+
+For now, the input file must be a compiled .hack file.
+
+A future version should be able to parse files in either Binary, Hack Assembly, VM assembly and Jack source. 
+Possibly all of it mixed up.
+
+
 New Peripherals
 ---------------
 
@@ -47,13 +63,8 @@ The Hack computer has been defined with a lot of unmapped memory -- We could use
     - stdin/stdout/stderr Pipes (So that I can use the Hack CPU in a terminal)
     - Filesystem access
     - Sockets
-    - OpenGL Graphics (why not, even [Bash got OpenGL support recently](https://opensource.com/article/18/4/opengl-bindings-bash))
+    - OpenGL Graphics ([even Bash has OpenGL support  ¯\\_(ツ)_/¯](https://opensource.com/article/18/4/opengl-bindings-bash))
     - etc
 
 The new peripherals could either be "always there", in a usually ignored address, or configurable via source file annotations, like `# buzzer @addr`
 
-
-Built-in Compiler
------------------
-
-A future version should be able to parse files in either Binary, Hack Assembly, VM assembly, Jack source. Possibly all of it mixed up.
