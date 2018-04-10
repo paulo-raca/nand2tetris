@@ -11,3 +11,8 @@ During the course I got to build all the parts of a complete (emulated) computer
 - [CPU and complete computer](05)
 - [A few programs in Hack Assembly](04)
 - [Hack Assembler](06)
+
+Emulator
+--------
+
+A long time after I followed along the course, I learned about [libretro](https://www.libretro.com/), liked that, and decided to create [hack_libretro](libretro).
